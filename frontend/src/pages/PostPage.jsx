@@ -1,8 +1,6 @@
 import Post from "../components/Post";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
-import Comments from "../components/Comments";
-import EditPost from "../components/EditPost";
 import Footnote from "../components/Footnote";
 
 function PostPage() {
@@ -13,7 +11,6 @@ function PostPage() {
 
             <div className="content">
                 <Post />
-                <EditPost />
             </div>
 
             <Footnote />

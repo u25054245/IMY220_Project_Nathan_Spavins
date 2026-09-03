@@ -1,5 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { posts } from "../assets/dummyData"
+import EditPost from "../components/EditPost";
 import Comments from "./Comments"
 
 function Post() {
@@ -25,6 +26,8 @@ function Post() {
             </div>
 
             <Comments comments={post.comments}/>
+
+            <EditPost />
         </div>
     );
 }

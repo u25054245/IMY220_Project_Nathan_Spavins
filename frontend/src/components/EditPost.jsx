@@ -1,7 +1,7 @@
 function EditPost() {
     return(
         <div className="EditPost">
-            <h1>Edit Post</h1>
+            <h2>Edit Post</h2>
         </div>
     )
 }

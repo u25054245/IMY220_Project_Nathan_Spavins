@@ -9,7 +9,7 @@ function CreatePost() {
                 <label>Image:</label>
                 <input type="file" id="imageUpload" accept="image/*" />
                 <label>Title</label>
-                <input type="input" id="description" />
+                <input type="input" id="title" />
                 <label>Description</label>
                 <input type="input" id="description" />
 

@@ -6,7 +6,6 @@ function Login() {
     const [password, setPassword] = useState("");
     const [eError, setEError] = useState("");
     const [pError, setPError] = useState("");
-    const [start, setStart] = useState(true);
 
     const navigate = useNavigate();
 

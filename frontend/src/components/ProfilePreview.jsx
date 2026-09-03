@@ -1,10 +1,10 @@
 import ProfilePic from "../assets/profilePic.png";
 
-function ProfilePreview() {
+function ProfilePreview(props) {
     return (
         <div className="section">
             <img className="profilePic" src={ProfilePic} />
-            <h1>Profile Name</h1>
+            <h1>{props.profile.username}</h1>
         </div>
     );
 }

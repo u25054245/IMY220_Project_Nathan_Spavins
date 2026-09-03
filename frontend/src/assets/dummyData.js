@@ -116,7 +116,28 @@ export const profiles = [
         id: 1,
         username: "Nathan Spavins",
         profilePic: profilePic,
-        posts: 5,
-        friends: [1, 1],
-    }
+        posts: [1],
+        friends: [2, 3, 4],
+    },
+    {
+        id: 2,
+        username: "John",
+        profilePic: profilePic,
+        posts: [2],
+        friends: [1, 3, 4],
+    },
+    {
+        id: 3,
+        username: "Sarah",
+        profilePic: profilePic,
+        posts: [3],
+        friends: [1, 2, 4],
+    },
+    {
+        id: 4,
+        username: "Harry",
+        profilePic: profilePic,
+        posts: [4],
+        friends: [1, 2, 3],
+    },
 ]

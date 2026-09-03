@@ -6,7 +6,7 @@ function Nav() {
     return (
         <nav className="nav">
             <Link to="/home" className="link">Home</Link>
-            <Link to="/profile" className="link">Profile</Link>
+            <Link to="/profile/1" className="link">Profile</Link>
         </nav>
     );
 }
