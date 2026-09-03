@@ -1,12 +1,13 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-function Login() {
+function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [passwordCheck, setPasswordCheck] = useState("");
     const [eError, setEError] = useState("");
     const [pError, setPError] = useState("");
-    const [start, setStart] = useState(true);
+    const [pcError, setPCError] = useState("");
 
     const navigate = useNavigate();
 
@@ -28,6 +29,14 @@ function Login() {
         }
     };
 
+    const changePasswordCheck = (value) => {
+        if(password != value) {
+            return "Passwords must match";
+        } else {
+            return ""; 
+        }
+    }
+
     const handleEmailChange = (event) => {
         const value = event.target.value;
         setEmail(value);
@@ -42,23 +51,32 @@ function Login() {
         setPError(changePassword(value));
     };
 
+    const handlePasswordCheckChange = (event) => {
+        const value = event.target.value;
+        setPasswordCheck(value);
+        
+        setPCError(changePasswordCheck(value));
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
 
         const e = changeEmail(email);
         const p = changePassword(password);
+        const pc = changePasswordCheck(passwordCheck);
 
         setEError(e);
         setPError(p);
+        setPCError(pc);
 
-        if(p !== "" || e !== "") return;
-
+        if(p !== "" || e !== "" || pc !== "") return;
+        
         navigate("/home");
     }
     
     return (
         <div className="login">
-            <h1>Log in Form</h1>
+            <h1>Sign Up Form</h1>
 
             <form onSubmit={handleSubmit} noValidate>
                 <label>Email:</label>
@@ -69,11 +87,21 @@ function Login() {
                 <input type="password" id="password" name="password" required value={password} onChange={handlePasswordChange}/>
                 <p>{pError}</p>
 
-                <button type="button">Cancel</button>
+                <label>Re-Enter Password:</label>
+                <input type="password" id="passwordCheck" name="password" required value={passwordCheck} onChange={handlePasswordCheckChange}/>
+                <p>{pcError}</p>
+
+                <label>Get Notified via email</label>
+                <input type="checkbox" class="check" name="notify" />
+
+                <label>Accept terms and conditions</label>
+                <input type="checkbox" class="check" name="accept" required/>
+
+                <button type="cancel">Cancel</button>
                 <button type="submit">Log-in</button>
             </form>
         </div>
     );
 }
 
-export default Login;
+export default Signup;

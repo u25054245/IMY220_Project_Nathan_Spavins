@@ -16,7 +16,6 @@ function Home() {
                 <div className="homeHeader">
                     <h1>Home Page</h1>
                     <input type="text" placeholder="Search" className="searchBar" />
-                    <input type="text" placeholder="Search" className="searchBar" />
                 </div>
 
 

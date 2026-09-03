@@ -1,5 +1,6 @@
 import Logo from "../assets/logo.png";
-import ProfilePic from "../assets/profilePic.png";
+
+import ProfilePreview from "./ProfilePreview"
 
 import "./Header.css";
 
@@ -11,10 +12,7 @@ function header() {
                 <h1>Exposure</h1>
             </div>
 
-            <div className="section">
-                <img className="profilePic" src={ProfilePic} />
-                <h1>Profile Name</h1>
-            </div>
+            <ProfilePreview className="ProfileHeader" />
         </header>
     );
 }

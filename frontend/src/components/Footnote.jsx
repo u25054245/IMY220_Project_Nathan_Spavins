@@ -1,8 +1,8 @@
 function Footnote() {
     return (
-        <footnote className="footnote">
+        <div className="footnote">
             <p>@ Exposure 2026</p>
-        </footnote>
+        </div>
     );
 }
 

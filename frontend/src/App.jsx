@@ -1,9 +1,9 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import Splash from "./pages/Splash"
-import Home from "./pages/Home"
-import Profile from "./pages/Profile"
-import Post from "./pages/Post"
+import HomePage from "./pages/HomePage"
+import ProfilePage from "./pages/ProfilePage"
+import PostPage from "./pages/PostPage"
 
 import './App.css'
 
@@ -18,17 +18,17 @@ function App() {
 
         <Route 
           path="/home"
-          element={<Home />}
+          element={<HomePage />}
         />
 
         <Route 
           path="/profile"
-          element={<Profile />}
+          element={<ProfilePage />}
         />
 
         <Route 
-          path="/post/:id"
-          element={<Post />}
+          path="/post"
+          element={<PostPage />}
         />
       </Routes>
     </BrowserRouter>
