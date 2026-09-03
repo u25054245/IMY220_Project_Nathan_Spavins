@@ -58,7 +58,7 @@ function Signup() {
         setPCError(changePasswordCheck(value));
     }
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const e = changeEmail(email);
@@ -70,7 +70,16 @@ function Signup() {
         setPCError(pc);
 
         if(p !== "" || e !== "" || pc !== "") return;
+
+        const response = await fetch("http://localhost:3000/sign-up", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({email, password}),
+        })
         
+        const data = await response.json();
+        console.log(data);
+
         navigate("/home");
     }
     

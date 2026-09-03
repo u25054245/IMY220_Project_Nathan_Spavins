@@ -41,7 +41,7 @@ function Login() {
         setPError(changePassword(value));
     };
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const e = changeEmail(email);
@@ -51,6 +51,15 @@ function Login() {
         setPError(p);
 
         if(p !== "" || e !== "") return;
+
+        const response = await fetch("http://localhost:3000/sign-in", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({email, password}),
+        })
+        
+        const data = await response.json();
+        console.log(data);
 
         navigate("/home");
     }

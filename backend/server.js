@@ -1,36 +1,38 @@
 const express = require("express");
-const http = require("http");
-const { Server } = require("socket.io");
+const cors = require("cors");
 
 const app = express();
-const server = http.createServer(app);
+app.use(cors());
 
-app.use(express.static("public"));
+app.use(express.json());
 
-const io = new Server(server);
+app.post("/sign-in", (req, res) => {
+    const { email, password } = req.body;
 
-io.on("connection", (socket) => {
-    socket.on("validateLogIn", (data) => {
-        console.log("Logged in");
-        
-        io.emit("chatMessage", {
-            username: data.username,
-            password: data.username
-        });
+    const dummydata = {
+        id: 12234,
+        email: email,
+    }
+
+    res.status(200).json(dummydata);
+})
+
+app.post("/sign-up", (req, res) => {
+    const { email, password } = req.body;
+
+    const dummydata = {
+        id: 12234,
+        email: email,
+    }
+
+    res.status(201).json({
+        message: "User created, welcome!",
+        data: dummydata,
     });
-
-    socket.on("validateSignUp", (data) => {
-        console.log("Signed up");
-
-        io.emit("chatMessage", {
-            username: data.username,
-            password: data.username
-        });
-    });
-});
+})
 
 const PORT = process.env.PORT || 3000;
 
-server.listen(PORT, () => {
+app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);
 });
