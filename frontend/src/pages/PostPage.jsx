@@ -6,18 +6,19 @@ import EditPost from "../components/EditPost";
 import Footnote from "../components/Footnote";
 
 function PostPage() {
-    <div className="page">
-        <Header />
-        <Nav />
+    return (
+        <div className="page">
+            <Header />
+            <Nav />
 
-        <div className="content">
-            <Post />
-            <Comments />
-            <EditPost />
+            <div className="content">
+                <Post />
+                <EditPost />
+            </div>
+
+            <Footnote />
         </div>
-
-        <Footnote />
-    </div>
+    )
 }
 
 export default PostPage;

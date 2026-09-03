@@ -1,7 +1,15 @@
-function Comments() {
+function Comments(props) {
     return (
         <div className="comments">
-            <h1>Comments</h1>
+            <h2>Comments:</h2>
+
+            <ul>
+                {
+                    props.comments.map(comment => (
+                        <li>{comment.author}: {comment.comment}</li>
+                    ))
+                }
+            </ul>
         </div>
     );
 }

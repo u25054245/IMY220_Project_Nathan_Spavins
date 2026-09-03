@@ -2,6 +2,7 @@ import Header from "../components/Header";
 import Nav from "../components/Nav"
 import Footnote from "../components/Footnote";
 import PostPreview from "../components/PostPreview";
+import { posts } from "../assets/dummyData"
 
 import "./Page.css";
 import "./Home.css";
@@ -20,13 +21,9 @@ function Home() {
 
 
                 <div className="posts">
-                    <PostPreview />
-                    <PostPreview />
-                    <PostPreview />
-                    <PostPreview />
-                    <PostPreview />
-                    <PostPreview />
-                    <PostPreview />
+                    {posts.map(post => (
+                        <PostPreview key={post.id} post={post} />
+                    ))}
                 </div>
 
                 <Footnote />

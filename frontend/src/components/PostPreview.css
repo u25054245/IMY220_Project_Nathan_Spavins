@@ -2,3 +2,9 @@ h1, p, h3 {
     text-decoration: none;
     color: black;
 }
+
+.postPreview {
+    border: 3px solid #000;
+    margin: 20px;
+    padding: 20px;
+}

@@ -1,19 +1,21 @@
-import { Link } from "react-router-dom";
+import { Link } from "react-router-dom"
 
-function PostPreview() {
+import "./PostPreview.css";
+
+function PostPreview(props) {
     return (
-        <Link to={'/post'}>
-            <div className="postPreview">
-                <h1>image</h1>
+        <div className="postPreview">
+            <Link to={`/post/${props.post.id}`}>
+                <img src={props.post.image} />
                 
                 <div className="postPreview-content">
-                    <h2>Title</h2>
-                    <p>Location</p>
-                    <p>Views</p>
-                    <p>Author</p>
+                    <h2>{props.post.title}</h2>
+                    <p>{props.post.location}</p>
+                    <p>{props.post.views}</p>
+                    <p>{props.post.author}</p>
                 </div>
-            </div>
-        </Link>
+            </Link>
+        </div>
     );
 }
 
