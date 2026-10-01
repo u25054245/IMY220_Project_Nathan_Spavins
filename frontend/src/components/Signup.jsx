@@ -71,7 +71,7 @@ function Signup() {
 
         if(p !== "" || e !== "" || pc !== "") return;
 
-        const response = await fetch("http://localhost:3000/sign-up", {
+        const response = await fetch("http://localhost:3000/api/sign-up", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({email, password}),
@@ -79,6 +79,11 @@ function Signup() {
         
         const data = await response.json();
         console.log(data);
+
+        if(data.error) {
+            setEError(data.error);
+            return;
+        }
 
         navigate("/home");
     }

@@ -52,7 +52,7 @@ function Login() {
 
         if(p !== "" || e !== "") return;
 
-        const response = await fetch("http://localhost:3000/sign-in", {
+        const response = await fetch("http://localhost:3000/api/sign-in", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({email, password}),
@@ -60,6 +60,11 @@ function Login() {
         
         const data = await response.json();
         console.log(data);
+
+        if(data.error) {
+            setEError(data.error);
+            return;
+        }
 
         navigate("/home");
     }
