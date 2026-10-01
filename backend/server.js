@@ -132,7 +132,7 @@ app.get("/api/users/:id", async (req, res) => {
 })
 
 //update user by id endpoint
-app.post("/api/users/:id", async (req, res) => {
+app.patch("/api/users/:id", async (req, res) => {
     const db = getDB();
 
     if(!db) {
@@ -201,9 +201,156 @@ app.delete("/api/users/:id", async (req, res) => {
         }
 
         await collection.deleteMany({ _id: new ObjectId(userId) });
-        await collection.deleteOne({ "friends": new ObjectId(userId) });
 
         res.status(200).json({ success: "User deleted successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+app.post("/api/users/:id/accept", async (req, res) => {
+    const db = getDB();
+
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+    const userId = req.params.id;
+
+    if(!userId) {
+        res.status(400).json({ error: "User ID is required" });
+        return;
+    }
+
+    try {
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+        const { friendId } = req.body;
+
+        if(!friendId) {
+            res.status(400).json({ error: "Friend ID is required" });
+            return;
+        }
+
+        if(!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if(!user.friendRequests.includes(friendId)) {
+            res.status(400).json({ error: "Friend request not found" });
+            return;
+        }
+
+        await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $delete: { friendRequests: friendId },
+                $push: { friends: friendId }
+            }
+        );
+    
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+app.post("/api/users/:id/reject", async (req, res) => {
+    const db = getDB();
+
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+    const userId = req.params.id;
+
+    if(!userId) {
+        res.status(400).json({ error: "User ID is required" });
+        return;
+    }
+
+    try {
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+        const { friendId } = req.body;
+
+        if(!friendId) {
+            res.status(400).json({ error: "Friend ID is required" });
+            return;
+        }
+
+        if(!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if(!user.friendRequests.includes(friendId)) {
+            res.status(400).json({ error: "Friend request not found" });
+            return;
+        }
+
+        await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $delete: { friendRequests: friendId }
+            }
+        );
+    
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+app.post("/api/users/:id/sendRequest", async (req, res) => {
+    const db = getDB();
+
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+    const userId = req.params.id;
+
+    if(!userId) {
+        res.status(400).json({ error: "User ID is required" });
+        return;
+    }
+
+    try {
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+        const { friendId } = req.body;
+
+        if(!friendId) {
+            res.status(400).json({ error: "Friend ID is required" });
+            return;
+        }
+
+        if(!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if(!user.friendRequests.includes(friendId)) {
+            res.status(400).json({ error: "Friend request not found" });
+            return;
+        }
+
+        await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $delete: { friends: friendId }
+            }
+        );
+    
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
