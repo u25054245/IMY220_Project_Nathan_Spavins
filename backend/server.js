@@ -209,6 +209,7 @@ app.delete("/api/users/:id", async (req, res) => {
     }
 })
 
+//accept friend request endpoint
 app.post("/api/users/:id/accept", async (req, res) => {
     const db = getDB();
 
@@ -235,12 +236,14 @@ app.post("/api/users/:id/accept", async (req, res) => {
             return;
         }
 
+        const friendObjectId = new ObjectId(friendId);
+
         if(!user) {
             res.status(404).json({ error: "User not found" });
             return;
         }
 
-        if(!user.friendRequests.includes(friendId)) {
+        if(!user.friendRequests.some(id => id.equals(friendObjectId))) {
             res.status(400).json({ error: "Friend request not found" });
             return;
         }
@@ -248,17 +251,26 @@ app.post("/api/users/:id/accept", async (req, res) => {
         await collection.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $delete: { friendRequests: friendId },
-                $push: { friends: friendId }
+                $pull: { friendRequests: friendObjectId },
+                $push: { friends: friendObjectId }
+            }
+        );
+
+        await collection.updateOne(
+            { _id: friendObjectId },
+            {
+                $push: { friends: new ObjectId(userId) }
             }
         );
     
+        res.status(200).json({ success: "Friend request accepted successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
     }
 })
 
+//reject friend request endpoint
 app.post("/api/users/:id/reject", async (req, res) => {
     const db = getDB();
 
@@ -285,12 +297,14 @@ app.post("/api/users/:id/reject", async (req, res) => {
             return;
         }
 
+        const friendObjectId = new ObjectId(friendId);
+
         if(!user) {
             res.status(404).json({ error: "User not found" });
             return;
         }
 
-        if(!user.friendRequests.includes(friendId)) {
+        if(!user.friendRequests.some(id => id.equals(friendObjectId))) {
             res.status(400).json({ error: "Friend request not found" });
             return;
         }
@@ -298,16 +312,18 @@ app.post("/api/users/:id/reject", async (req, res) => {
         await collection.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $delete: { friendRequests: friendId }
+                $pull: { friendRequests: friendObjectId }
             }
         );
     
+        res.status(200).json({ success: "Friend request rejected successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
     }
 })
 
+//send friend request endpoint
 app.post("/api/users/:id/sendRequest", async (req, res) => {
     const db = getDB();
 
@@ -334,30 +350,92 @@ app.post("/api/users/:id/sendRequest", async (req, res) => {
             return;
         }
 
+        const friendObjectId = new ObjectId(friendId);
+
         if(!user) {
             res.status(404).json({ error: "User not found" });
             return;
         }
 
-        if(!user.friendRequests.includes(friendId)) {
-            res.status(400).json({ error: "Friend request not found" });
+        if(user.friendRequests.some(id => id.equals(friendObjectId))) {
+            res.status(400).json({ error: "Friend request already sent" });
             return;
         }
 
         await collection.updateOne(
             { _id: new ObjectId(userId) },
             {
-                $delete: { friends: friendId }
+                $push: { friendRequests: friendObjectId }
             }
         );
-    
+
+        res.status(200).json({ success: "Friend request sent successfully" });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: error.message });
     }
 })
 
+//unfriend endpoint
+app.post("/api/users/:id/unfriend", async (req, res) => {
+    const db = getDB();
 
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+    
+    const userId = req.params.id;
+
+    if(!userId) {
+        res.status(400).json({ error: "User ID is required" });
+        return;
+    }
+
+    try {
+        const user = await collection.findOne({ _id: new ObjectId(userId) });
+
+        const { friendId } = req.body;
+
+        if(!friendId) {
+            res.status(400).json({ error: "Friend ID is required" });
+            return;
+        }
+
+        const friendObjectId = new ObjectId(friendId);
+
+        if(!user) {
+            res.status(404).json({ error: "User not found" });
+            return;
+        }
+
+        if(!user.friends.some(id => id.equals(friendObjectId))) {
+            res.status(400).json({ error: "Friend not found" });
+            return;
+        }
+
+        await collection.updateOne(
+            { _id: new ObjectId(userId) },
+            {
+                $pull: { friends: friendObjectId }
+            }
+        );
+
+        await collection.updateOne(
+            { _id: friendObjectId },
+            {
+                $pull: { friends: new ObjectId(userId) }
+            }
+        );
+
+        res.status(200).json({ success: "Friend removed successfully" });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
 
 const PORT = process.env.PORT || 3000;
 
