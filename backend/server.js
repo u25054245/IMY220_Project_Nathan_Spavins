@@ -450,7 +450,6 @@ app.post("/api/users/:id/unfriend", async (req, res) => {
 //========== Exposure Endpoints ==========
 
 //creating post with UserID, image, description, and hashtags endpoint
-
 const imageStorage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, "exposures/")
@@ -499,6 +498,25 @@ app.post("/api/exposures", upload.single("file"), async (req, res) => {
     }
 })
 
+app.get("/api/users/:id/exposure", async (req, res) => {
+    const db = getDB();
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    try {
+        const exposures = await db.collection("Exposures")
+            .find({ user_id: new ObjectId(req.params.id) })
+            .toArray()
+        
+        res.status(200).json(exposures);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
 //update exposure endpoint
 app.patch("/api/exposures/:id", async (req, res) => {
     const db = getDB();
@@ -533,6 +551,34 @@ app.patch("/api/exposures/:id", async (req, res) => {
         await collection.updateOne({ _id: new ObjectId(exposureId) }, { $set: updateData });
 
         res.status(200).json({ success: "Exposure updated successfully" });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+//get exposure
+app.get("/api/exposures/:id", async (req, res) => {
+    const db = getDB();
+
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Exposures");
+
+    const exposureId = req.params.id;
+
+    try {
+        const exposure = await collection.findOne({ _id: new ObjectId(exposureId) });
+
+        if(!exposure) {
+            res.status(404).json({ error: "Exposure not found" });
+            return;
+        }
+
+        res.status(200).json(exposure);
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: error.message });
@@ -608,6 +654,25 @@ app.post("/api/albumns", async (req, res) => {
     }
 })
 
+app.get("/api/users/:id/albumns", async (req, res) => {
+    const db = getDB();
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    try {
+        const albumns = await db.collection("Albumns")
+            .find({ user_id: new ObjectId(req.params.id) })
+            .toArray()
+        
+        res.status(200).json(albumns);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
 //delete albumn endpoint
 app.delete("/api/albumns/:id", async (req, res) => {
     const db = getDB();
@@ -642,6 +707,33 @@ app.delete("/api/albumns/:id", async (req, res) => {
     }
 })
 
+//get albumn
+app.get("/api/albumns/:id", async (req, res) => {
+    const db = getDB();
+
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Albumns");
+
+    const albumnId = req.params.id;
+
+    try {
+        const albumn = await collection.findOne({ _id: new ObjectId(albumnId) });
+
+        if(!albumn) {
+            res.status(404).json({ error: "Exposure not found" });
+            return;
+        }
+
+        res.status(200).json(albumn);
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
 
 //update albumn endpoint
 app.patch("/api/albumns/:id", async (req, res) => {

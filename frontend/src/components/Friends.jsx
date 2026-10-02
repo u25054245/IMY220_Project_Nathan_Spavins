@@ -1,4 +1,3 @@
-import { profiles } from "../assets/dummyData";
 import ProfilePreview from "./ProfilePreview";
 
 function Friends(props) {

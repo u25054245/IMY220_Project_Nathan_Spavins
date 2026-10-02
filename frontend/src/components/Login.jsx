@@ -66,6 +66,8 @@ function Login() {
             return;
         }
 
+        localStorage.setItem("user", data._id);
+
         navigate("/home");
     }
     

@@ -85,6 +85,8 @@ function Signup() {
             return;
         }
 
+        localStorage.setItem("user", data._id);
+
         navigate("/home");
     }
     
@@ -106,10 +108,10 @@ function Signup() {
                 <p>{pcError}</p>
 
                 <label>Get Notified via email</label>
-                <input type="checkbox" class="check" name="notify" />
+                <input type="checkbox" className="check" name="notify" />
 
                 <label>Accept terms and conditions</label>
-                <input type="checkbox" class="check" name="accept" required/>
+                <input type="checkbox" className="check" name="accept" required/>
 
                 <button type="cancel">Cancel</button>
                 <button type="submit">Log-in</button>

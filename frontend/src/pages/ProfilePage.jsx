@@ -7,41 +7,62 @@ import Friends from "../components/Friends";
 import EditProfile from "../components/EditProfile";
 import { useParams } from "react-router-dom";
 
-import { profiles } from "../assets/dummyData";
+import { useState, useEffect } from "react";
 
 import "./Page.css";
 
 function ProfilePage() {
+    const { id } = useParams()
 
-    const { id } = useParams();
-    const profile = profiles.find(profile => profile.id === Number(id));
+    const [profile, setProfile] = useState(null);
+    const [error, setError] = useState(null);
+    const [loading, setLoading] = useState(true);
 
-    if(!profile) {
-        return (
-        <div className="page">
-            <Header />
-            <Nav />
+    const ownProfile = id === localStorage.getItem("user");
+        
+    async function loadUser(url) {
+        setLoading(true);
+        setError("");
+        
+        try {
+            const response = await fetch(url);
 
-            <div className="content">
-                <p>Profile not found</p>
-            </div>
-        </div>
-    );
+            if(!response.ok) {
+                throw new Error("Error in fetching user.");
+            }
+
+            const data = await response.json();
+            setProfile(data);
+        } catch(error) {
+            setError(error.message);
+        } finally {
+            setLoading(false);
+        }
     }
+
+    useEffect(() => {
+        loadUser(`http://localhost:3000/api/users/${id}`);
+    }, [id]);
 
     return (
         <div className="page">
             <Header />
             <Nav />
 
-            <div className="content">
-                <Profile profile={profile}/>
-                <CreatePost />
-                <Friends friends={profile.friends}/>
-                <EditProfile />
+            { loading && <p>Loading...</p> }
 
-                <Footnote />
-            </div>
+            { error && !loading && <p>{ error }</p>}
+
+            { !loading && !error && profile &&
+                <div className="content">
+                    <Profile profile={profile} id={id}/>
+                    { ownProfile && <CreatePost /> }
+                    <Friends friends={profile.friends || []}/>
+                    { ownProfile && <EditProfile /> }
+                </div>
+            }
+
+            <Footnote />
         </div>
     );
 }
