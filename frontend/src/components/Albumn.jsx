@@ -1,17 +1,17 @@
 import { Link, useParams } from "react-router-dom";
-import EditPost from "../components/EditPost";
-import Comments from "./Comments"
+import EditAlbumn from "../components/EditAlbumn";
+import PostPreview from "./PostPreview"
 
 import { useState, useEffect } from "react";
 
-function Post() {
+function Albumn() {
     const { id } = useParams();
     
-    const [post, setPost] = useState(null);
+    const [albumn, setAlbumn] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
     
-    async function loadPost(url) {
+    async function loadAlbumn(url) {
         setLoading(true);
         setError("");
         
@@ -19,11 +19,11 @@ function Post() {
             const response = await fetch(url);
 
             if(!response.ok) {
-                throw new Error("Error in fetching post.");
+                throw new Error("Error in fetching albumn.");
             }
 
             const data = await response.json();
-            setPost(data);
+            setAlbumn(data);
         } catch(error) {
             setError(error.message);
             console.error(error.message);
@@ -33,37 +33,34 @@ function Post() {
     }
 
     useEffect(() => {
-        loadPost(`http://localhost:3000/api/exposures/${id}`)
+        loadAlbumn(`http://localhost:3000/api/albumns/${id}`)
     }, [id]);
 
     return (
-        <div className="post">
+        <div className="albumn">
             { loading && <p>Loading...</p> }
             { error && !loading && <p>{ error }</p>}
             
             {!loading && !error && 
                 <div>
-                    <img src={post.image}/>
+                    <h2>{albumn.title}</h2>
             
-                    <div className="post-content">
-                        <h2>{post.title}</h2>
-                        <p>{post.location}</p>
-                        <p>{post.views}</p>
-                        <p>{post.author}</p>
+                    <div className="albumn-content">
+                        <p>{albumn.description}</p>
+                        <p>{albumn.views}</p>
+                        <p>{albumn.author}</p>
                     </div>
 
-                    <div className="post-description">
-                        <p>{post.description}</p>
+                    <div className="albumn-description">
+                        <p>{albumn.description}</p>
                         <Link to={'/Home'}><button type="submit">Back</button></Link>
                     </div>
 
-                    <Comments key={post.id} comments={post.comments}/>
-
-                    <EditPost />
+                    <EditAlbumn />
                 </div>
             }
         </div>
     );
 }
 
-export default Post;
+export default Albumn;

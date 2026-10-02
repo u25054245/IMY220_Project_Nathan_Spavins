@@ -1,9 +1,7 @@
-import ProfilePic from "../assets/profilePic.png";
-
 function ProfilePreview(props) {
     return (
         <div className="section">
-            <img className="profilePic" src={ProfilePic} />
+            <img className="profilePic" src={props.profile.profile_picture} />
             <h1>{props.profile.username}</h1>
         </div>
     );

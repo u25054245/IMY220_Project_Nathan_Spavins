@@ -71,7 +71,7 @@ function Signup() {
 
         if(p !== "" || e !== "" || pc !== "") return;
 
-        const response = await fetch("http://localhost:3000/sign-up", {
+        const response = await fetch("http://localhost:3000/api/sign-up", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({email, password}),
@@ -79,6 +79,13 @@ function Signup() {
         
         const data = await response.json();
         console.log(data);
+
+        if(data.error) {
+            setEError(data.error);
+            return;
+        }
+
+        localStorage.setItem("user", data._id);
 
         navigate("/home");
     }
@@ -101,10 +108,10 @@ function Signup() {
                 <p>{pcError}</p>
 
                 <label>Get Notified via email</label>
-                <input type="checkbox" class="check" name="notify" />
+                <input type="checkbox" className="check" name="notify" />
 
                 <label>Accept terms and conditions</label>
-                <input type="checkbox" class="check" name="accept" required/>
+                <input type="checkbox" className="check" name="accept" required/>
 
                 <button type="cancel">Cancel</button>
                 <button type="submit">Log-in</button>

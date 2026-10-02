@@ -1,18 +1,16 @@
-import Post from "../components/Post";
+import Albumn from "../components/Albumn";
 import Header from "../components/Header";
 import Nav from "../components/Nav";
 import Footnote from "../components/Footnote";
 
-function PostPage() {
-    
-    
+function AlbumnPage() {
     return (
         <div className="page">
             <Header />
             <Nav />
 
             <div className="content">
-                <Post />
+                <Albumn />
             </div>
 
             <Footnote />
@@ -20,4 +18,4 @@ function PostPage() {
     )
 }
 
-export default PostPage;
+export default AlbumnPage;

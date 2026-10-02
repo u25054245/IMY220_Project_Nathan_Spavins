@@ -4,6 +4,7 @@ import Splash from "./pages/Splash"
 import HomePage from "./pages/HomePage"
 import ProfilePage from "./pages/ProfilePage"
 import PostPage from "./pages/PostPage"
+import AlbumnPage from "./pages/AlbumnPage"
 
 import './App.css'
 
@@ -29,6 +30,11 @@ function App() {
         <Route 
           path="/post/:id"
           element={<PostPage />}
+        />
+
+        <Route
+          path="/albumn/:id"
+          element={<AlbumnPage />}
         />
       </Routes>
     </BrowserRouter>
