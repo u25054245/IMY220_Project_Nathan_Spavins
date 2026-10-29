@@ -7,7 +7,7 @@ Docker:
 
     backend:
         to build: docker build -t exposure-backend .
-        to run: docker run -p 3000:3000 exposure-backend
+        to run: docker run -p 3001:3001 exposure-backend
 
     then you can open the app at http://localhost:5173/ and it should work
 
