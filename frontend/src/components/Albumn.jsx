@@ -10,6 +10,8 @@ function Albumn() {
     
     const [albumn, setAlbumn] = useState(null);
     const [exposures, setExposures] = useState([]);
+    const [add, setAdd] = useState("");
+    const [userExpo, setUserExpo] = useState([]);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
@@ -29,7 +31,7 @@ function Albumn() {
             const data = await response.json();
             setAlbumn(data);
 
-            await loadPosts(data);
+            await loadPosts(data.exposures);
         } catch(error) {
             setError(error.message);
             console.error(error.message);
@@ -41,6 +43,8 @@ function Albumn() {
     async function loadPosts(a) {
         setLoading(true);
         setError("");
+
+        console.log(a);
         
         try {
             const response = await fetch('http://localhost:3000/api/exposures');
@@ -50,11 +54,16 @@ function Albumn() {
             }
 
             const data = await response.json();
-            const albumnExposures = data.filter(exposure => a.includes(exposure))
 
+            const albumnExposures = data.filter(exposure => a.includes(exposure._id))
             setExposures(albumnExposures);
-            console.log("yooo")
+
+            const temp = data.filter(exposure => exposure.user_id === localStorage.getItem("user"))
+            const userExposures = temp.filter(exposure => !albumnExposures.includes(exposure))
+            setUserExpo(userExposures)
+
             console.log(albumnExposures)
+            console.log(userExpo)
         } catch(error) {
             setError(error.message);
             console.error(error.message);
@@ -92,19 +101,65 @@ function Albumn() {
     async function removePost(e) {
         setLoading(true);
         setError("");
+
+        const filteredExpo = exposures.filter(exposure => exposure._id != e)
+
+        const filteredExp = albumn.exposures.filter(exposure => exposure != e)
+        const updateAlbumn = { ...albumn, exposures: filteredExp };
         
         try {
             const response = await fetch(`http://localhost:3000/api/albumns/${id}`, {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
-                body: albumnExposures.filter(exosure != e._id)
+                body: JSON.stringify(updateAlbumn)
             });
 
             if(!response.ok) {
-                throw new Error("Error in fetching albumn.");
+                throw new Error("Error in removing post.");
             }
 
-            navigate(`/home`)
+            setAlbumn(updateAlbumn);
+            setExposures(filteredExpo)
+
+        } catch(error) {
+            setError(error.message);
+            console.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const changeAdd = (event) => {
+        const value = event.target.value;
+        setAdd(value);
+    };
+
+    async function handleAdd(event) {
+        event.preventDefault();
+
+        setLoading(true);
+        setError("");
+
+        const exp = userExpo.find(exposure => exposure._id === add)
+        const filteredExpo = [ ...exposures, exp ]
+
+        const filteredExp = [ ...albumn.exposures, add ]
+        const updateAlbumn = { ...albumn, exposures: filteredExp };
+        
+        try {
+            const response = await fetch(`http://localhost:3000/api/albumns/${id}`, {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(updateAlbumn)
+            });
+
+            if(!response.ok) {
+                throw new Error("Error in adding post.");
+            }
+
+            setAlbumn(updateAlbumn);
+            setExposures(filteredExpo)
+
         } catch(error) {
             setError(error.message);
             console.error(error.message);
@@ -139,14 +194,28 @@ function Albumn() {
                     }
 
                     <h2>Exposures</h2>
-                    <div className="posts">
+                    <div className="posts mb-10 grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {exposures.map(exposure => {
                             return <div key={exposure._id} className="albumnExposure">
                                 <PostPreview exposure={exposure} />
-                                { albumn.user_id === localStorage.getItem("user") && <button onSubmit={removePost}>Remove Post</button> }
+                                { albumn.user_id === localStorage.getItem("user") && <button onClick={() => removePost(exposure._id)}>Remove Post</button> }
                             </div>
                         })}
                     </div>
+
+                    { albumn.user_id === localStorage.getItem("user") && 
+                        <form onSubmit={handleAdd}>
+                            <select value={add} onChange={changeAdd}>
+                                { 
+                                    userExpo.map(exposure => {
+                                        return <option key={exposure._id} value={exposure._id}>{exposure.title}</option>
+                                    })
+                                }
+                            </select>
+
+                            <button type="submit">Add Post</button>
+                        </form>
+                    }
                 </div>
             }
         </div>

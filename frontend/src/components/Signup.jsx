@@ -1,6 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
+import "./Signup.css"
+
 function Signup() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -94,16 +96,16 @@ function Signup() {
         <div className="login">
             <h1>Sign Up Form</h1>
 
-            <form onSubmit={handleSubmit} noValidate>
-                <label>Email:</label>
+            <form className="" onSubmit={handleSubmit} noValidate>
+                <label htmlFor="email">Email:</label>
                 <input type="text" id="email" name="email" required value={email} onChange={handleEmailChange}/>
                 <p>{eError}</p>
 
-                <label>Password:</label>
+                <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" required value={password} onChange={handlePasswordChange}/>
                 <p>{pError}</p>
 
-                <label>Re-Enter Password:</label>
+                <label htmlFor="passwordCheck">Re-Enter Password:</label>
                 <input type="password" id="passwordCheck" name="password" required value={passwordCheck} onChange={handlePasswordCheckChange}/>
                 <p>{pcError}</p>
 
@@ -113,7 +115,7 @@ function Signup() {
                 <label>Accept terms and conditions</label>
                 <input type="checkbox" className="check" name="accept" required/>
 
-                <button type="cancel">Cancel</button>
+                <button type="button">Cancel</button>
                 <button type="submit">Log-in</button>
             </form>
         </div>

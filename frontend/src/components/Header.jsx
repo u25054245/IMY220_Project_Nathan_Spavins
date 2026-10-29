@@ -76,34 +76,21 @@ function header({ Tprofile, setTProfile }) {
         loadUser(`http://localhost:3000/api/users/${id}`);
     }, [id]);
 
-    const TempProfile = Tprofile
+    const TempProfile = Tprofile || profile
     
     return (
         <header>
             { loading && <p>Loading...</p> }
             { error && !loading && <p>{ error }</p>}
 
-            { !loading && !error && profile && !Tprofile &&
-                <div className="header">
-                    <div className="section">
-                        <img className="logo" src={Logo} />
-                        <h1>Exposure</h1>
-                    </div>
-
-                    <ProfilePreview className="ProfileHeader" key={profile.key} profile={profile} />
-                    <button onClick={() => logout()}>Log-out</button>
-                    <button onClick={() => deleteUser()}>Delete Profile</button>
-                </div>
-            }
-
             { !loading && !error && TempProfile &&
-                <div className="header">
-                    <div className="section">
-                        <img className="logo" src={Logo} />
+                <div className="header fixed inset-x-0 top-0 z-50 flex h-header items-center gap-4 px-6">
+                    <div className="mr-auto flex items-center gap-4" onClick={() => navigate("/home")}>
+                        <img className="logo h-25 w-37.5 object-contain" src={Logo} />
                         <h1>Exposure</h1>
                     </div>
 
-                    <ProfilePreview className="ProfileHeader" key={Tprofile.key} profile={Tprofile} />
+                    <ProfilePreview key={TempProfile.key} profile={TempProfile} picSize="size-18" />
                     <button onClick={() => logout()}>Log-out</button>
                     <button onClick={() => deleteUser()}>Delete Profile</button>
                 </div>

@@ -9,7 +9,7 @@ function AlbumnPage() {
             <Header />
             <Nav />
 
-            <div className="content">
+            <div className="content mt-header ml-nav min-h-screen p-8">
                 <Albumn />
             </div>
 

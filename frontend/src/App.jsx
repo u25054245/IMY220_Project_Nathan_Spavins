@@ -6,6 +6,8 @@ import ProfilePage from "./pages/ProfilePage"
 import PostPage from "./pages/PostPage"
 import AlbumnPage from "./pages/AlbumnPage"
 
+import ProtectedRoute from "./pages/ProtectedRoute";
+
 import './App.css'
 
 function App() {
@@ -19,22 +21,38 @@ function App() {
 
         <Route 
           path="/home"
-          element={<HomePage />}
+          element={
+            <ProtectedRoute>
+              <HomePage />
+            </ProtectedRoute>
+          }
         />
 
         <Route 
           path="/profile/:id"
-          element={<ProfilePage />}
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
         />
 
         <Route 
           path="/post/:id"
-          element={<PostPage />}
+          element={
+            <ProtectedRoute>
+              <PostPage />
+            </ProtectedRoute>
+          }
         />
 
-        <Route
+        <Route 
           path="/albumn/:id"
-          element={<AlbumnPage />}
+          element={
+            <ProtectedRoute>
+              <AlbumnPage />
+            </ProtectedRoute>
+          }
         />
       </Routes>
     </BrowserRouter>

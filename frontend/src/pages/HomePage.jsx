@@ -48,7 +48,7 @@ function Home() {
             <Nav />
             <Header />
 
-            <div className="content">
+            <div className="content mt-header ml-nav min-h-screen p-8">
                 <div className="homeHeader">
                     <h1>Home Page</h1>
                     <input type="text" placeholder="Search" className="searchBar" />
@@ -62,7 +62,7 @@ function Home() {
                 { error && !loading && <p>{ error }</p>}
 
                 { !loading &&
-                    <div className="posts">
+                    <div className="posts mb-10 grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {posts.map(post => (
                             <PostPreview key={post._id} exposure={post} />
                         ))}

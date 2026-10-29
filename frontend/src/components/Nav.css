@@ -1,4 +1,4 @@
-.nav {
+/* .nav {
     display: flex;
     flex-direction: column;
 
@@ -21,4 +21,21 @@
 
 img {
     transform: scale(0.8);
+} */
+
+@layer components {
+    .nav {
+        background: #F2F2F2;
+        border-right: 3px solid #000;
+    }
+
+    .link {
+        color: #000;
+        font-size: 20px;
+        text-decoration: none;
+    }
+
+    .link:hover {
+        background-color: #FF8C00;
+    }
 }

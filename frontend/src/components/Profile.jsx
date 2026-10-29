@@ -1,6 +1,7 @@
 import ProfilePreview from "./ProfilePreview";
 import PostPreview from "./PostPreview";
 import AlbumnPreview from "./AlbumnPreview"
+import CreateAlbumn from "./CreateAlbumn"
 
 import { useState, useEffect } from "react";
 
@@ -42,27 +43,39 @@ function Profile({ profile, id })
 
     return (
         <div className="Profile">
-            <ProfilePreview key={id} profile={profile} />
+            <div className="mb-8 grid grid-cols-2 items-center gap-6">
+                <ProfilePreview key={id} profile={profile} />
 
-            <p>{ profile.bio }</p>
-            <p>Exposures {exposures.length}</p>
-            <p>Albumns {albumns.length}</p>
-            <p>Friends {(profile.friends || []).length}</p>
+                <div>
+                    <p>{ profile.bio }</p>
+                    <p>Exposures {exposures.length}</p>
+                    <p>Albumns {albumns.length}</p>
+                    <p>Friends {(profile.friends || []).length}</p>
+                </div>
+            </div>
+
+            <hr className="mb-8"/>
 
             { loading && <p>Loading...</p> }
             { error && !loading && <p>{ error }</p>}
 
             { !loading && !error && 
                 <div>
-                    <h2>Albumns</h2>
-                    <div className="albumns">
+                    <h1>Albumns</h1>
+                    <div className="albumns mb-10 grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {albumns.map(albumn => {
                             return <AlbumnPreview key={albumn._id} albumn={albumn} />
                         })}
                     </div>
 
-                    <h2>Exposures</h2>
-                    <div className="posts">
+                    <hr className="mb-8"/>
+
+                    <CreateAlbumn />
+
+                    <hr className="mb-8 mt-8"/>
+
+                    <h1>Exposures</h1>
+                    <div className="posts mb-10 grid grid-cols-1 items-start gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {exposures.map(exposure => {
                             return <PostPreview key={exposure._id} exposure={exposure} />
                         })}

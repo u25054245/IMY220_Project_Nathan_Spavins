@@ -76,11 +76,11 @@ function Login() {
             <h1>Log in Form</h1>
 
             <form onSubmit={handleSubmit} noValidate>
-                <label>Email:</label>
+                <label htmlFor="email">Email:</label>
                 <input type="text" id="email" name="email" required value={email} onChange={handleEmailChange}/>
                 <p>{eError}</p>
 
-                <label>Password:</label>
+                <label htmlFor="password">Password:</label>
                 <input type="password" id="password" name="password" required value={password} onChange={handlePasswordChange}/>
                 <p>{pError}</p>
 

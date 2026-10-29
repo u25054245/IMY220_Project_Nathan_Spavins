@@ -1,19 +1,62 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "tailwindcss";
 
 :root {
     --fontHeading: "Montserrat", sans-serif;
     --fontBody: "Open Sans", sans-serif;
 }
 
-body {
-    margin: 0;
-    font-family: var(--fontBody);
+@theme {
+    --spacing-header: 130px;
+    --spacing-nav: 130px;
 }
 
-h1, h2, h3 {
-    font-family: var(--fontHeading);
-}
+@layer base {
+    body {
+        margin: 0;
+        font-family: var(--fontBody);
+    }
 
-button, input {
-    font-family: inherit;
+    h1, h2, h3 {
+        font-family: var(--fontHeading);
+        font-weight: 700;
+        margin-bottom: 0.5em;
+    }
+
+    h1 { font-size: 2rem }
+    h2 { font-size: 1.5rem }
+    h3 { font-size: 1.17rem }
+
+    button, input {
+        font-family: inherit;
+    }
+
+    button {
+        padding: 8px 18px;
+        font-weight: 600;
+        color: #000;
+        background: #FF8C00;
+        border: 2px solid #000;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    button:hover {
+        background: #E67E00;
+    }
+
+    input, select {
+        width: 100%;
+        padding: 8px 10px;
+        background: #fff;
+        border: 2px solid #000;
+        border-radius: 4px;
+    }
+
+    input:focus, select:focus {
+        outline: 3px solid #FF8C00;
+        outline-offset: 1px;
+    }
 }

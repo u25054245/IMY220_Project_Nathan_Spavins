@@ -1,4 +1,4 @@
-/*.splash {
+/* .splash {
     background-image: url('../assets/SplashImg.png');
     background-size: cover;
     background-position: center;
@@ -6,4 +6,14 @@
     min-height: 100vh;
 
     opacity: 0.9;
-}*/
+} */
+
+@layer component {
+    .backgroundImg {
+        filter: brightness(0.5);
+    }
+
+    .splashContent {
+        color: #fff;
+    }
+}

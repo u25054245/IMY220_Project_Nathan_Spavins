@@ -88,11 +88,16 @@ function ProfilePage() {
             { error && !loading && <p>{ error }</p>}
 
             { !loading && !error && profile &&
-                <div className="content">
+                <div className="content mt-header ml-nav min-h-screen p-8">
                     <Profile profile={profile} id={id}/>
-                    { ownProfile && <CreatePost /> }
+
+                    <hr className="mb-8 mt-8"/>
+
+                    { ownProfile && <div><CreatePost /><hr className="mb-8 mt-8"/></div> }
                     <Friends friends={profile.friends || []}/>
+                    <hr className="mb-8 mt-8"/>
                     { ownProfile && <EditProfile setProfile={setProfile} /> }
+                    <br />
                     { ownProfile && 
                         <form className="UpdateProfilePic" onSubmit={handleUpdate}>
                             <label>Image:</label>

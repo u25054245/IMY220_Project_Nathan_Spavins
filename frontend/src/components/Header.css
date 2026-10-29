@@ -1,4 +1,4 @@
-.header {
+/* .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -28,4 +28,16 @@
     height: 120px;
     border-radius: 50%;
     margin-left: auto;
+} */
+
+@layer components {
+    .header {
+        background-color: #FF8C00;
+        border-bottom: 3px solid #000;
+    }
+
+    .profilePic {
+        border-radius: 50%;
+        object-fit: cover;
+    }
 }

@@ -116,7 +116,7 @@ app.get("/api/users/:id", async (req, res) => {
     const userId = req.params.id;
 
     try {
-        const user = await collection.findOne({ _id: new ObjectId(userId) });
+        const user = await collection.findOne({ _id: new ObjectId(userId) }, { projection: {password: 0} });
 
         if(!user) {
             res.status(404).json({ error: "User not found" });
@@ -327,6 +327,25 @@ app.post("/api/users/:id/accept", async (req, res) => {
         );
     
         res.status(200).json({ success: "Friend request accepted successfully" });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+//get all users
+app.get("/api/users", async (req, res) => {
+    const db = getDB();
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+
+    try {
+        const users = await collection.find({}, { projection: {password: 0} }).toArray();
+        res.status(200).json(users);
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: error.message });

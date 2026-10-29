@@ -1,0 +1,13 @@
+@layer components {
+    .login h1 {
+        color: #FFF;
+    }
+
+    .login  label {
+        color: #FFF;
+    }
+
+    .login p {
+        color: red;
+    }
+}
