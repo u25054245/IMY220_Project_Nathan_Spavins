@@ -14,6 +14,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/exposures", express.static(path.join(__dirname, "exposures")));
+app.use("/users", express.static(path.join(__dirname, "users")));
 
 //========== Authentication Endpoints ==========
 
@@ -177,6 +178,58 @@ app.patch("/api/users/:id", async (req, res) => {
 
         await collection.updateOne({ _id: new ObjectId(userId) }, { $set: updateData });
         res.status(200).json({ success: "User updated successfully" });
+    } catch(error) {
+        console.error(error);
+        res.status(500).json({ error: error.message });
+    }
+})
+
+//updates users image
+const UsersStorage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, path.join(__dirname, "users"))
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + "-" + file.originalname)
+    }
+})
+
+const userUpload = multer({ storage: UsersStorage });
+
+app.patch("/api/usersPic/:id", userUpload.single("file"), async (req, res) => {
+    const db = getDB();
+    if(!db) {
+        res.status(500).json({ error: "database undefined" })
+        return;
+    }
+
+    const collection = db.collection("Users");
+
+    const userId = req.params.id;
+
+    if(!userId) {
+        res.status(400).json({ error: "User ID is required" });
+        return;
+    }
+
+    if(!req.file) {
+        res.status(400).json({ error: "Image file is required" });
+        return;
+    }
+
+    try {
+        const image = req.file.filename;
+        if(!image) {
+            res.status(400).json({ error: "Image is required" });
+            return;
+        }
+
+        const updateData = {};
+
+        updateData.profile_picture = image;
+
+        await collection.updateOne({ _id: new ObjectId(userId) }, { $set: updateData });
+        res.status(200).json({ success: "Profile Pic updated successfully" });
     } catch(error) {
         console.error(error);
         res.status(500).json({ error: error.message });
@@ -450,16 +503,16 @@ app.post("/api/users/:id/unfriend", async (req, res) => {
 //========== Exposure Endpoints ==========
 
 //creating post with UserID, image, description, and hashtags endpoint
-const imageStorage = multer.diskStorage({
+const ExposuresStorage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "exposures/")
+        cb(null, path.join(__dirname, "exposures"))
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + "-" + file.originalname)
     }
 })
 
-const upload = multer({ storage: imageStorage });
+const upload = multer({ storage: ExposuresStorage });
 
 app.post("/api/exposures", upload.single("file"), async (req, res) => {
     const db = getDB();
@@ -476,16 +529,17 @@ app.post("/api/exposures", upload.single("file"), async (req, res) => {
     }
 
     try {
-        const { user_id, description, hashtags } = req.body;
-        if(!user_id || !description || !hashtags) {
-            res.status(400).json({ error: "UserID, description, and hashtags are required" });
+        const { user_id, title, description, hashtags } = req.body;
+        if(!user_id || !title || !description || !hashtags) {
+            res.status(400).json({ error: "UserID, title, description, and hashtags are required" });
             return;
         }
 
         const newExposure = {
             image: `/exposures/${req.file.filename}`,
+            title: title,
             description: description,
-            hashtags: hashtags,
+            hashtags: JSON.parse(hashtags),
             created: new Date(),
             user_id: new ObjectId(user_id)
         };

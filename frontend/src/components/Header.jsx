@@ -8,7 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 import "./Header.css";
 
-function header() {
+function header({ Tprofile, setTProfile }) {
     const id = localStorage.getItem("user")
     const navigate = useNavigate()
 
@@ -75,13 +75,15 @@ function header() {
     useEffect(() => {
         loadUser(`http://localhost:3000/api/users/${id}`);
     }, [id]);
+
+    const TempProfile = Tprofile
     
     return (
         <header>
             { loading && <p>Loading...</p> }
             { error && !loading && <p>{ error }</p>}
 
-            { !loading && !error && profile &&
+            { !loading && !error && profile && !Tprofile &&
                 <div className="header">
                     <div className="section">
                         <img className="logo" src={Logo} />
@@ -89,6 +91,19 @@ function header() {
                     </div>
 
                     <ProfilePreview className="ProfileHeader" key={profile.key} profile={profile} />
+                    <button onClick={() => logout()}>Log-out</button>
+                    <button onClick={() => deleteUser()}>Delete Profile</button>
+                </div>
+            }
+
+            { !loading && !error && TempProfile &&
+                <div className="header">
+                    <div className="section">
+                        <img className="logo" src={Logo} />
+                        <h1>Exposure</h1>
+                    </div>
+
+                    <ProfilePreview className="ProfileHeader" key={Tprofile.key} profile={Tprofile} />
                     <button onClick={() => logout()}>Log-out</button>
                     <button onClick={() => deleteUser()}>Delete Profile</button>
                 </div>

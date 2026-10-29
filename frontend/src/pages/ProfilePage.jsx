@@ -18,6 +18,8 @@ function ProfilePage() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
 
+    const [image, setImage] = useState("");
+
     const ownProfile = id === localStorage.getItem("user");
         
     async function loadUser(url) {
@@ -44,9 +46,41 @@ function ProfilePage() {
         loadUser(`http://localhost:3000/api/users/${id}`);
     }, [id]);
 
+    const handleImgChange = (event) => {
+        const value = event.target.files[0];
+        setImage(value);
+    };
+
+    const handleUpdate = async(event) => {
+        event.preventDefault();
+
+        try {
+            const formData = new FormData();
+
+            formData.append("file", image)
+            
+            const res = await fetch(`http://localhost:3000/api/usersPic/${localStorage.getItem("user")}`, {
+                method: "PATCH",
+                body: formData,
+            })
+
+            if(!res.ok) {
+                throw new Error("Unable to Update Profile Picture.")
+            }
+
+            const data = await res.json();
+            console.log(data);
+
+            loadUser(`http://localhost:3000/api/users/${id}`)
+
+        } catch(error) {
+            setError(error.message);
+        }
+    }
+
     return (
         <div className="page">
-            <Header />
+            <Header Tprofile={profile}/>
             <Nav />
 
             { loading && <p>Loading...</p> }
@@ -58,7 +92,15 @@ function ProfilePage() {
                     <Profile profile={profile} id={id}/>
                     { ownProfile && <CreatePost /> }
                     <Friends friends={profile.friends || []}/>
-                    { ownProfile && <EditProfile /> }
+                    { ownProfile && <EditProfile setProfile={setProfile} /> }
+                    { ownProfile && 
+                        <form className="UpdateProfilePic" onSubmit={handleUpdate}>
+                            <label>Image:</label>
+                            <input type="file" id="imageUpload" accept="image/*" onChange={handleImgChange} />
+
+                            <button type="submit">Change Profile Picture</button>
+                        </form>
+                    }
                 </div>
             }
 

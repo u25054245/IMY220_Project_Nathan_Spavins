@@ -1,6 +1,7 @@
 import { Link, useParams } from "react-router-dom";
 import EditPost from "../components/EditPost";
 import Comments from "./Comments"
+import { useNavigate } from "react-router-dom";
 
 import { useState, useEffect } from "react";
 
@@ -10,6 +11,8 @@ function Post() {
     const [post, setPost] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+
+    const navigate = useNavigate()
     
     async function loadPost(url) {
         setLoading(true);
@@ -32,6 +35,28 @@ function Post() {
         }
     }
 
+    async function deletePost() {
+        setLoading(true);
+        setError("");
+
+        try {
+            const response = await fetch(`http://localhost:3000/api/exposures/${id}`, {
+                method: "DELETE",
+            });
+
+            if(!response.ok) {
+                throw new Error("Error in deleting post.");
+            }
+
+            navigate(`/home`)
+        } catch(error) {
+            setError(error.message);
+            console.error(error.message);
+        } finally {
+            setLoading(false);
+        }
+    }
+
     useEffect(() => {
         loadPost(`http://localhost:3000/api/exposures/${id}`)
     }, [id]);
@@ -43,7 +68,7 @@ function Post() {
             
             {!loading && !error && 
                 <div>
-                    <img src={post.image}/>
+                    <img src={`http://localhost:3000${post.image}`}/>
             
                     <div className="post-content">
                         <h2>{post.title}</h2>
@@ -58,8 +83,11 @@ function Post() {
                     </div>
 
                     <Comments key={post.id} comments={post.comments}/>
+                    <EditPost post={post} setPost={setPost}/>
 
-                    <EditPost />
+                    { post.user_id === localStorage.getItem("user") &&
+                        <button className="post-delete" onClick={deletePost}>Delete Post</button>
+                    }
                 </div>
             }
         </div>
